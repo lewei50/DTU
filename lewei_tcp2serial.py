@@ -11,7 +11,7 @@ import socket
 import time
 from random import *
 
-leweiModbusServer = "127.0.0.1"#"modbus.lewei50.com"
+leweiModbusServer = "modbus.lewei50.com"
 leweiModbusPort = 9970
 
 gatewayNo = '24'#gateway No. in lewei50
