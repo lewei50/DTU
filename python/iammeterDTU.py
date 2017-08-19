@@ -13,7 +13,7 @@ from random import *
 leweiModbusServer = "pm.modbus.lewei50.com"
 leweiModbusPort = 9970
 
-message='TAD41DD3D'
+message=''
 
 
 ser=None
