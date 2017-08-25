@@ -1,6 +1,7 @@
 
 local server = "modbus.lewei50.com"
---local server = "192.168.0.5"
+if(_G['lewei_url']~=nil)then server = _G['lewei_url'] end
+local server = "114.55.54.60"
 local serverPort = 9970
 local socket = nil
 local retryCount = 0
@@ -30,6 +31,7 @@ function connectSvr(svr,port)
      end)
      socket:connect(port,svr)
      socket:on("connection", function(sck, c)
+          tmr.stop(1)
           retryCount = 0
           if(regPacket ~=nil)then
                sendData(regPacket)
@@ -47,7 +49,7 @@ function connectSvr(svr,port)
 
      end)
      socket:on("disconnection",function(sck, c)
-          tmr.alarm(1, 5000, tmr.ALARM_SINGLE, function()
+          tmr.alarm(1, 5000, tmr.ALARM_AUTO, function()
           --if(server ~=nil and serverPort ~= nil) then
           connectSvr(server,serverPort)
           --end
