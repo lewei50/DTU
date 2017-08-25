@@ -1,7 +1,7 @@
 
 local server = "modbus.lewei50.com"
 if(_G['lewei_url']~=nil)then server = _G['lewei_url'] end
-local server = "114.55.54.60"
+--local server = "114.55.54.60"
 local serverPort = 9970
 local socket = nil
 local retryCount = 0
