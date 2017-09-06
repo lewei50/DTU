@@ -33,10 +33,12 @@ srv:listen(80,function(conn)
                EasyWebConfig.addVar("regPacket")
                EasyWebConfig.addVar("bps")
           else
+               EasyWebConfig.addVar("lewei_url")
+               EasyWebConfig.addVar("lewei_port")
+               EasyWebConfig.addVar("ssid")
+               EasyWebConfig.addVar("password")
+               EasyWebConfig.addVar("regPacket")
                EasyWebConfig.addVar("bps")
-               EasyWebConfig.addVar("deviceAddress")
-               EasyWebConfig.addVar("operationCode")
-               EasyWebConfig.addVar("validRegister")
           end
     
           --find last line in plyload(stupid function,improve later)

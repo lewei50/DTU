@@ -3,6 +3,7 @@ local server = "modbus.lewei50.com"
 if(_G['lewei_url']~=nil)then server = _G['lewei_url'] end
 --local server = "114.55.54.60"
 local serverPort = 9970
+if(_G['lewei_port']~=nil)then serverPort = _G['lewei_port'] end
 local socket = nil
 local retryCount = 0
 rcv = ""
