@@ -6,6 +6,7 @@ local serverPort = 9970
 if(_G['lewei_port']~=nil)then serverPort = _G['lewei_port'] end
 local socket = nil
 local retryCount = 0
+local bConnected = false
 rcv = ""
 if (bps == nil) then bps = 9600 end
 
@@ -33,6 +34,7 @@ function connectSvr(svr,port)
      socket:connect(port,svr)
      socket:on("connection", function(sck, c)
           tmr.stop(1)
+          bConnected = true
           retryCount = 0
           if(regPacket ~=nil)then
                sendData(regPacket)
@@ -50,9 +52,14 @@ function connectSvr(svr,port)
 
      end)
      socket:on("disconnection",function(sck, c)
+     			bConnected = false
           tmr.alarm(1, 5000, tmr.ALARM_AUTO, function()
           --if(server ~=nil and serverPort ~= nil) then
-          connectSvr(server,serverPort)
+          if(bConnected == false) then
+          	connectSvr(server,serverPort)
+          else
+          	tmr.stop(1)
+          end
           --end
           end)
           socket = nil
