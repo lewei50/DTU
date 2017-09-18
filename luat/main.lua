@@ -5,6 +5,7 @@ require"wdt"
 require"config"
 require"nvm"
 require"mcuart"
+require"misc"
 
 --初始化参数管理模块
 nvm.init("config.lua")

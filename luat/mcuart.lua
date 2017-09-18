@@ -11,7 +11,7 @@ local UART_ID = 1
 --例如：SND_UNIT_MAX,SND_DELAY = 1024,1000，有如下几种情况
 --串口收到了500字节数据，接下来的1000毫秒没有收到数据，并且没有正在发送数据到后台，则立即发送这500字节数据给后台
 --串口收到了500字节数据，800毫秒后，又收到了524字节数据，此时没有正在发送数据到后台，则立即发送这1024字节数据给后台
-local SND_UNIT_MAX,SND_DELAY = 1024,100
+local SND_UNIT_MAX,SND_DELAY = 1024,1000
 
 --sndingtosvr：是否正在发送数据到后台
 local sndingtosvr
@@ -29,12 +29,17 @@ local readbuf--[[,sndingbuf]] = ""--[[,""]]
 ]]--
 local function varChk(data)
 print("checking data"..data)
+print(sck.getServerReadyState())
      key,val = string.match(data, "setvar:([%w_]+)=([%w._,]+)%&%^%!")
      print(key,val)
      if(key ~= nil and val ~= nil) then
           nvm.set(key,val)
           nvm.flush()
-          write("save ok")
+          
+          --reload the var from file
+          nvm.init("/para.lua")
+          testVal = nvm.get(key)
+          write("save ok!sn:"..testVal..",imei="..misc.getimei())
           return true
      else
      			return false
@@ -73,6 +78,11 @@ end
 local function getsndingbuf()
 	print("getsndingbuf",string.len(readbuf),sndingtosvr,sys.timer_is_active(sndtosvr))
 	varChk(readbuf)
+	
+	if (sck.getServerReadyState() == false) then
+		readbuf = ""
+	end
+	
 	if string.len(readbuf)>0 and not sndingtosvr and (not sys.timer_is_active(sndtosvr) or string.len(readbuf)>=SND_UNIT_MAX) then
 		local endidx = string.len(readbuf)>=SND_UNIT_MAX and SND_UNIT_MAX or string.len(readbuf)
 		local retstr = string.sub(readbuf,1,endidx)
@@ -122,7 +132,10 @@ local function proc(data)
 	if not data or string.len(data) == 0 then return end
 	--追加到未发送数据缓冲区末尾
 	readbuf = readbuf..data
-	if string.len(readbuf)>=SND_UNIT_MAX then sndtosvr() end
+	
+	if string.len(readbuf)>=SND_UNIT_MAX then 
+		sndtosvr()
+	end
 	sys.timer_start(sndtosvr,SND_DELAY)
 end
 
