@@ -1,6 +1,12 @@
 require"socket"
 module(...,package.seeall)
 
+function SoftWdt(id)
+	print("TimerFunction: "..id)
+	sys.restart("timed out")
+end
+
+sys.timer_loop_start(SoftWdt,660000,"start SoftWdt timer")
 --[[
 功能需求：
 1、数据网络准备就绪后，连接后台
@@ -15,6 +21,8 @@ module(...,package.seeall)
 local ssub,schar,smatch,sbyte,slen = string.sub,string.char,string.match,string.byte,string.len
 --测试时请搭建自己的服务器
 local SCK_IDX,PROT,ADDR,PORT = 1,"TCP",lewei_url,lewei_port
+local bServerReadyStatues = false
+local SERVER_WAIT_TIME = 5000
 --linksta:与后台的socket连接状态
 local linksta
 --一个连接周期内的动作：如果连接后台失败，会尝试重连，重连间隔为RECONN_PERIOD秒，最多重连RECONN_MAX_CNT次
@@ -134,10 +142,13 @@ function ntfy(idx,evt,result,item)
 			--停止重连定时器
 			sys.timer_stop(reconn)
 			--发送mcu通过串口传过来的数据到后台
+			bServerReadyStatues  = true
+			--sys.timer_start(resetServerReadyStatues,SERVER_WAIT_TIME,2)
 			if(regcode ~="") then
 				snd(regcode,"TRANSPARENT")
 			else
-				snd(user_key.."_"..gate_way,"TRANSPARENT")
+				snd(misc.getimei(),"TRANSPARENT")
+				--snd(user_key.."_"..gate_way,"TRANSPARENT")
 			end
 			sndmcuartdata()
 		--连接失败
@@ -185,7 +196,23 @@ end
 function rcv(idx,data)
 	print("rcv",slen(data)>200 and slen(data) or data)
 	--抛出SVR_TRANSPARENT_TO_MCU消息，携带socket收到的数据
+	sys.timer_stop_all(SoftWdt)
+	sys.timer_loop_start(SoftWdt,660000,"reset SoftWdt timer")
 	sys.dispatch("SVR_TRANSPARENT_TO_MCU",data)
+	sys.timer_start(resetServerReadyStatues,SERVER_WAIT_TIME,2)
+	bServerReadyStatues = true
+end
+
+function resetServerReadyStatues()
+	bServerReadyStatues  = false
+end
+
+function setServerReadyState(stat)
+	bServerReadyStatues = stat
+end
+
+function getServerReadyState()
+	return bServerReadyStatues
 end
 
 --[[
