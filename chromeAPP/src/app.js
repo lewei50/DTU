@@ -28,6 +28,7 @@ function netSend(pl)
           connectLewei();
         }
     });
+    appendLog(">>"+toAscii(ab2str(pl))+"\n");
   }
   catch(err)
   {
@@ -55,6 +56,7 @@ function serialSend(pl)
 	try
   {
 		sp.write(pl);
+    appendLog("<<"+toAscii(ab2str(pl))+"\n");
 	}
 	catch(err)
 	{
@@ -62,8 +64,44 @@ function serialSend(pl)
 	}
 }
 
+function appendLog(log)
+{
+  $('#log').append(formatDate(new Date().getTime())+log);
+  var scrollTop = $("#log")[0].scrollHeight;  
+  $("#log").scrollTop(scrollTop);  
+  console.log($('#log').val().length);
+}
+
+function formatDate(time){
+    var date = new Date(time);
+
+    var year = date.getFullYear(),
+        month = date.getMonth() + 1,//月份是从0开始的
+        day = date.getDate(),
+        hour = date.getHours(),
+        min = date.getMinutes(),
+        sec = date.getSeconds();
+    var newTime = year + '-' +
+                month + '-' +
+                day + ' ' +
+                hour + ':' +
+                min + ':' +
+                sec;
+    return newTime;         
+}
+
+function toAscii(str)
+{
+	var arr = [];
+  //arr.push("0x");
+  for(var i=0;i<str.length;i++){
+    arr.push(str.charCodeAt(i).toString(16));
+  }
+  return arr.join(' ');
+}
+
 function ab2str(buf) {
-    return String.fromCharCode.apply(null, new Uint16Array(buf));
+    return String.fromCharCode.apply(null, new Uint8Array(buf));
 }
 
 function str2ab(str) {
