@@ -1,0 +1,18 @@
+{
+    "name": "Lewei Web DTU",
+    "description": "乐联网Web DTU，Chrome 应用。",
+    "version": "0.1",
+    "manifest_version": 2,
+    "app": {
+      "background": {
+        "scripts": ["background.js"]
+      }
+    },
+    "sockets": {
+        "tcp" : {
+          "connect": ""
+        }
+      },
+    "permissions": [{"fileSystem": ["write"]},"storage","serial"],
+    "icons": { "16": "lewei_logo_16.png", "128": "lewei_logo_128.png" }
+  }
