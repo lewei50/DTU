@@ -38,7 +38,7 @@ function netSend(pl)
 
 var onConnectedCallback = function (r) {
 
-  	$('#nwk_switch').attr('src',"icon_switch_off.jpg");
+  	$('#nwk_switch').attr('src',"icon_switch_on.jpg");
     var buf = str2ab(txtRegCode);
     console.log(chrome.sockets.tcp.onReceive);
     function serSend(d) {
