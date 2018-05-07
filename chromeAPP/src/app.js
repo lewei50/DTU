@@ -9,7 +9,7 @@ function connectLewei()
   {
     chrome.sockets.tcp.close(clientId);
   }
-  $('#nwk_switch').attr('src',"icon_switch_on.jpg");
+  $('#nwk_switch').attr('src',"icon_switch_off.jpg");
   chrome.sockets.tcp.create({}, function (createInfo) {
       chrome.sockets.tcp.connect(createInfo.socketId,
           leweiUrl, leweiPort, onConnectedCallback);
@@ -38,6 +38,7 @@ function netSend(pl)
 
 var onConnectedCallback = function (r) {
 
+  	$('#nwk_switch').attr('src',"icon_switch_off.jpg");
     var buf = str2ab(txtRegCode);
     console.log(chrome.sockets.tcp.onReceive);
     function serSend(d) {
