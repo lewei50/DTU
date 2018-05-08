@@ -40,16 +40,26 @@ var onConnectedCallback = function (r) {
 
   	$('#nwk_switch').attr('src',"icon_switch_on.jpg");
     var buf = str2ab(txtRegCode);
-    console.log(chrome.sockets.tcp.onReceive);
+    //console.log(chrome.sockets.tcp.onReceive);
     function serSend(d) {
         //need to send to serial port
         serialSend(d.data);
+    }
+    function rcvErr(d) {
+        console.log(d);
+        if(d.resultCode == -100)
+        {
+        	//disconnected from server side
+        	setTimeout(connectLewei,5000+Math.floor(Math.random() * 60000));
+        }
     }
     chrome.sockets.tcp.send(clientId, buf, function (d) {
         console.log(d);
     })
     if(!chrome.sockets.tcp.onReceive.hasListeners())
     chrome.sockets.tcp.onReceive.addListener(serSend);
+    if(!chrome.sockets.tcp.onReceiveError.hasListeners())
+    chrome.sockets.tcp.onReceiveError.addListener(rcvErr);
 };
 
 function serialSend(pl)
