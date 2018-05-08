@@ -50,6 +50,7 @@ var onConnectedCallback = function (r) {
         if(d.resultCode == -100)
         {
         	//disconnected from server side
+        	$('#nwk_switch').attr('src',"icon_switch_off.jpg");
         	setTimeout(connectLewei,5000+Math.floor(Math.random() * 60000));
         }
     }
