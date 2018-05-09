@@ -1,6 +1,6 @@
 var clientId;
-//var leweiUrl = "modbus.lewei50.com";
-var leweiUrl = "127.0.0.1";
+var leweiUrl = "modbus.lewei50.com";
+//var leweiUrl = "127.0.0.1";
 var leweiPort = 9970;
 var netPayload = "";
 
