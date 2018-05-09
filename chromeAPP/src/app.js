@@ -1,6 +1,8 @@
 var clientId;
-var leweiUrl = "modbus.lewei50.com";
+//var leweiUrl = "modbus.lewei50.com";
+var leweiUrl = "127.0.0.1";
 var leweiPort = 9970;
+var netPayload = "";
 
 function connectLewei()
 {
@@ -36,15 +38,25 @@ function netSend(pl)
   }
 }
 
+function serSend() {
+    //need to send to serial port
+    serialSend(netPayload);
+    netPayload = "";
+}
+
 var onConnectedCallback = function (r) {
 
   	$('#nwk_switch').attr('src',"icon_switch_on.jpg");
     var buf = str2ab(txtRegCode);
     //console.log(chrome.sockets.tcp.onReceive);
-    function serSend(d) {
-        //need to send to serial port
-        serialSend(d.data);
-    }
+    
+		function strJoin(d)
+		{
+			console.log(ab2str(d.data));
+			clearTimeout(serSend);
+			netPayload += ab2str(d.data);
+			setTimeout(serSend,100);
+		}
     function rcvErr(d) {
         console.log(d);
         if(d.resultCode == -100)
@@ -58,17 +70,19 @@ var onConnectedCallback = function (r) {
         console.log(d);
     })
     if(!chrome.sockets.tcp.onReceive.hasListeners())
-    chrome.sockets.tcp.onReceive.addListener(serSend);
+    chrome.sockets.tcp.onReceive.addListener(strJoin);
     if(!chrome.sockets.tcp.onReceiveError.hasListeners())
     chrome.sockets.tcp.onReceiveError.addListener(rcvErr);
 };
 
+
 function serialSend(pl)
 {
+	console.log(pl);
 	try
   {
-		sp.write(pl);
-    appendLog("<<"+toAscii(ab2str(pl))+"\n");
+		sp.write(str2ab(pl));
+    appendLog("<<"+toAscii(pl)+"\n");
 	}
 	catch(err)
 	{
@@ -81,7 +95,7 @@ function appendLog(log)
   $('#log').append(formatDate(new Date().getTime())+log);
   var scrollTop = $("#log")[0].scrollHeight;  
   $("#log").scrollTop(scrollTop);  
-  console.log($('#log').val().length);
+  //console.log($('#log').val().length);
 }
 
 function formatDate(time){
