@@ -24,7 +24,7 @@ function netSend(pl)
   try
   {
     chrome.sockets.tcp.send(clientId, pl, function (d) {
-        console.log(d.resultCode);
+        //console.log(d.resultCode);
         if(d.resultCode!= 0)
         {
           connectLewei();

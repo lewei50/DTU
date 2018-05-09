@@ -5,6 +5,7 @@ var SerialPort = SerialPortLib.SerialPort;
 sp = null;
 var strFeedBack = "";
 connectionId = -1;
+var serPayload = "";
 
 
 
@@ -105,9 +106,22 @@ function connect(port, baudrate) {
 	// });
 
 	sp.on("dataString", function(string) {
-		netSend(string);
+		strJoin(string);
 	});
 
+	function netSendPayLoad()
+	{
+		netSend(str2ab(serPayload));
+		serPayload = "";
+	}
+
+	function strJoin(pl)
+	{
+		clearTimeout(netSendPayLoad);
+		serPayload += ab2str(pl);
+		//console.log(serPayload);
+		setTimeout(netSendPayLoad,100);
+	}
 	function strToHexCharCode(str) {
     if(str === "")
      return "";
