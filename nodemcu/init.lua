@@ -35,6 +35,7 @@ end
 function setupServer()
      wifi.sta.getap(function(t)
           available_aps = ""
+          --[[
           if t then
                local count = 0
                for k,v in pairs(t) do
@@ -48,7 +49,7 @@ function setupServer()
                end
                available_aps = available_aps .. "<option value='-1'>---hidden SSID---</option>"
           end
-
+          ]]--
      if srv ~= nil then srv:close() end
      print("Setting up webserver")
      srv=net.createServer(net.TCP)
