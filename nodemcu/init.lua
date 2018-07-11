@@ -100,7 +100,7 @@ function setupServer()
                if (_GET.ssid == "-1") then _GET.ssid=_GET.hiddenssid end
                --_G['html_head']="<meta http-equiv=\"refresh\" content=\"5;url=\\\">"
                --if(wifi.sta.status()~=5) then 
-                    _G['status']="Connecting..."
+                    _G['status']="Saved.Connecting..."
                     station_cfg={}
                     station_cfg.ssid=_GET.ssid
                     station_cfg.pwd=_GET.password
@@ -108,7 +108,7 @@ function setupServer()
                     wifi.sta.config(station_cfg)
                --end
            end
-           if(_G['status']=="Connecting...")then
+           if(_G['status']=="Saved.Connecting...")then
                _G['html_head']="<meta http-equiv=\"refresh\" content=\"5;url=\\\">"
            end
           --node.compile("config.lua")
