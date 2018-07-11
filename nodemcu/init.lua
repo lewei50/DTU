@@ -13,7 +13,7 @@ function setupDefaultAp()
      cfg={}
      cfg.ssid="DTU_"..node.chipid()
      cfg.pwd="12345678"
-     if(wifi.ap.config(cfg))then 
+     if(wifi.ap.config(cfg))then
           print("AP is ON")
           setupServer()
      end
@@ -34,18 +34,18 @@ end
 
 function setupServer()
      wifi.sta.getap(function(t)
-          available_aps = "" 
-          if t then 
+          available_aps = ""
+          if t then
                local count = 0
-               for k,v in pairs(t) do 
-                    ap = string.format("%-10s",k) 
+               for k,v in pairs(t) do
+                    ap = string.format("%-10s",k)
                     ap = trim(ap)
                     available_aps = available_aps .. "<option value='".. ap .."'"
                     if(ap == _G['ssid']) then available_aps = available_aps .. " selected=\"SELECTED\"" end
                     available_aps = available_aps ..">".. ap .."</option>"
                     count = count+1
-                    if (count>=20) then break end
-               end 
+                    if (count>=15) then break end
+               end
                available_aps = available_aps .. "<option value='-1'>---hidden SSID---</option>"
           end
 
@@ -54,27 +54,27 @@ function setupServer()
      srv=net.createServer(net.TCP)
      srv:listen(80,function(conn)
      conn:on("receive", function(client,request)
-     
+
           fetchFile = "wifi.html"
           local _, _, method, path, vars = string.find(request, "([A-Z]+) (.+)?(.+) HTTP");
-          
+
           --if(method == nil)then
            _, _, method, path = string.find(request, "([A-Z]+) (.+) HTTP");
           --print(method,path,vars)
-          if(path =="/dev") then 
+          if(path =="/dev") then
                fetchFile = "dev.html"
           elseif(path =="/info.xml") then
                fetchFile = "info.xml"
-          end 
+          end
           print("Send HTML File:"..fetchFile)
-          --print(request)
+          --print(node.heap())
           if (file.open(fetchFile,'r')) then
                buf = file.read()
                file.close()
           end
           --end
           local _GET = {}
-          configFile = "config.lua" 
+          configFile = "config.lua"
           if (vars ~= nil)then
                for k, v in string.gmatch(vars, "([_%w]+)=([^%&]+)&*") do
                     _GET[k] = unescape(v)
@@ -82,7 +82,7 @@ function setupServer()
                end
           end
           cfgContent = ""
-          -- write every variable in the form 
+          -- write every variable in the form
           for k,v in pairs(_GET) do
                cfgContent = cfgContent .. k..' = "'..v ..'"\r\n'
                _G[k]=v
@@ -95,11 +95,11 @@ function setupServer()
                     file.close()
                end
           end
-          
+
           if (_GET.password ~= nil) then
                if (_GET.ssid == "-1") then _GET.ssid=_GET.hiddenssid end
                --_G['html_head']="<meta http-equiv=\"refresh\" content=\"5;url=\\\">"
-               --if(wifi.sta.status()~=5) then 
+               --if(wifi.sta.status()~=5) then
                     _G['status']="Saved.Connecting..."
                     station_cfg={}
                     station_cfg.ssid=_GET.ssid
@@ -115,9 +115,9 @@ function setupServer()
           --file.remove("config.lua")
           --client:send(buf);
           --node.restart();
-          
-          buf = buf:gsub('($%b{})', function(w) 
-               return _G[w:sub(3, -2)] or "" 
+
+          buf = buf:gsub('($%b{})', function(w)
+               return _G[w:sub(3, -2)] or ""
           end)
 
           payloadLen = string.len(buf)
@@ -129,20 +129,22 @@ function setupServer()
                client:send("Content-Type: text/html; charset=UTF-8\r\n")
                client:send("Content-Length:" .. tostring(payloadLen) .. "\r\n")
           end
-          client:send("Connection:close\r\n\r\n")               
+          client:send("Connection:close\r\n\r\n")
           if(info~="" and info~= nil) then client:send(buf, function(client) client:close() end);
           --print(info)
           info = ""
           else client:send(buf, function(client) client:close() end);
-          buf = ""
+          buf = nil
           end
           _G['html_head']=""
+          _GET = nil
+          --print(node.heap())
           end)
      end)
      print("Webserver ready: " .. ip)
      --print(node.heap())
      end)
-     
+
 end
 
 function setupMonitor()
@@ -154,7 +156,7 @@ function setupMonitor()
           print("\n\tSTA - DISCONNECTED".."\n\tSSID: "..T.SSID.."\n\tBSSID: "..
           T.BSSID.."\n\treason: "..T.reason)
           _G['status']="wifi error code:"..T.reason
-          wifi.sta.disconnect() 
+          wifi.sta.disconnect()
           setupDefaultAp()
           --restart in 5 min later
           tmr.alarm(0,300000,0,function()
