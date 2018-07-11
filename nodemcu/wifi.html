@@ -5,7 +5,7 @@
 <table border='1'>
 <tr><td><a href="http://${ip}/"><h1>WIFI SETUP</h1></a></td><td><a href="http://${ip}/dev"><h1>DEVICE SETUP</h1></a></td></tr>
 <tr><td>RegCode: ${regCode}</td><td>BaudRate:${baudRate}</td></tr>
-<tr><td>SSID: </td><td><select name='ssid' onchange="showHiddenSSID()">${available_aps}</select></td></tr>
+<tr><td>SSID: </td><td><select id='ssid' onchange="showHiddenSSID()">${available_aps}</select></td></tr>
 <tr id="hiddenSSID" style="display:none"><td>(Hidden SSID): </td><td><input name='hiddenssid' value=''/></td></tr>
 <tr><td>Password: </td><td><input type='password' name='password' value='${password}'></input></td></tr>
 <tr><td>${status}</td><td><button type='submit'>Save</button></td></tr>
