@@ -2,7 +2,7 @@
 <URLBase>http://${ip}/</URLBase>
 <device>
 <deviceType>urn:schemas-upnp-org:device:BinaryLight:1</deviceType>
-<friendlyName>LeweiDTU_${chipId}</friendlyName>
+<friendlyName>DTU_${regCode}</friendlyName>
 <presentationURL>/</presentationURL>
 <serialNumber>${chipId}</serialNumber>
 <modelName>LeweiDTU</modelName>

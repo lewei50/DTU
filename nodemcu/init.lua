@@ -11,7 +11,10 @@ print(server)
 function setupDefaultAp()
      print("start default ap")
      cfg={}
-     cfg.ssid="DTU_"..node.chipid()
+     cfg.ssid="DTU"
+     if(regCode~=nil) then
+          cfg.ssid="DTU-"..regCode
+     end
      cfg.pwd="12345678"
      if(wifi.ap.config(cfg))then
           print("AP is ON")
