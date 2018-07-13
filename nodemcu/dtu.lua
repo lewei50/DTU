@@ -12,9 +12,12 @@ if (baudRate == nil) then baudRate = 9600 end
 
 function sendData(data)
      if(socket ~= nil) then
+          --prport,prip = socket:getpeer()
+          --print(prport,prip)
           socket:send(data)
      end
 end
+
 function resolveData(data)
      sendData(data)
 end
@@ -31,7 +34,6 @@ function connectSvr(svr,port)
      socket:on("receive", function(sck, c) 
           uart.write(0,c)
      end)
-     socket:connect(port,svr)
      socket:on("connection", function(sck, c)
           tmr.stop(1)
           bConnected = true
@@ -39,6 +41,8 @@ function connectSvr(svr,port)
           if(regCode ~=nil)then
                sendData(regCode)
           end
+          tmr.register(reRegtimer, 300000, tmr.ALARM_AUTO)
+          tmr.start(reRegtimer)
           uart.setup(0, baudRate, 8, uart.PARITY_NONE, uart.STOPBITS_1, 1)
           uart.on("data", 0,
             function(data)
@@ -52,7 +56,8 @@ function connectSvr(svr,port)
 
      end)
      socket:on("disconnection",function(sck, c)
-     			bConnected = false
+          print('disconnected')
+     	bConnected = false
           tmr.alarm(1, 5000, tmr.ALARM_AUTO, function()
           --if(server ~=nil and serverPort ~= nil) then
           if(bConnected == false) then
@@ -64,6 +69,7 @@ function connectSvr(svr,port)
           end)
           socket = nil
      end)
+     socket:connect(port,svr)
 end
 
 connectSvr(server,serverPort)

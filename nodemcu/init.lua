@@ -6,7 +6,7 @@ chipId = string.format("%x",node.chipid())
 tmr.alarm(0,2000,0,function()
 require("config")
 require("devConfig")
-print(server)
+--print(server)
 
 function setupDefaultAp()
      print("start default ap")
@@ -200,8 +200,11 @@ ssid, password, bssid_set, bssid=wifi.sta.getconfig()
 if(ssid==nil or ssid=="")then
      setupDefaultAp()
 else
-     print("connecting")
+     print("Connectint AP")
      wifi.sta.connect()
+     if(wifi.sta.getip()~=nil) then
+          setupServer()
+     end
 end
 
 end )
