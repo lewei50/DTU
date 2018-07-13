@@ -13,7 +13,7 @@ function setupDefaultAp()
      cfg={}
      cfg.ssid="DTU"
      if(regCode~=nil) then
-          cfg.ssid="DTU-"..regCode
+          cfg.ssid="DTU-"..string.sub(regCode,1,10)
      end
      cfg.pwd="12345678"
      if(wifi.ap.config(cfg))then

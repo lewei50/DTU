@@ -41,8 +41,10 @@ function connectSvr(svr,port)
           if(regCode ~=nil)then
                sendData(regCode)
           end
-          tmr.register(reRegtimer, 300000, tmr.ALARM_AUTO)
+          local reRegtimer = tmr.create()
+          tmr.register(reRegtimer, 300000, tmr.ALARM_AUTO,function (t) sendData(regCode) end)
           tmr.start(reRegtimer)
+          
           uart.setup(0, baudRate, 8, uart.PARITY_NONE, uart.STOPBITS_1, 1)
           uart.on("data", 0,
             function(data)
