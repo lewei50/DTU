@@ -7,6 +7,12 @@ tmr.alarm(0,2000,0,function()
 require("config")
 require("devConfig")
 --print(server)
+if(regCode~=nil) then
+     regCodeShort =string.sub(regCode,-10,-1)
+else
+     regCodeShort = ""
+end
+
 
 function setupDefaultAp()
      print("start default ap")
