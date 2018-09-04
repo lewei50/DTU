@@ -38,6 +38,11 @@ SerialPortLib.list(function(err, ports) {
 			var port = portsPath.options[portsPath.selectedIndex].value;
 			var baudrateElement = document.getElementById("baudrate");
 			var baudrate = baudrateElement.options[baudrateElement.selectedIndex].value;
+			var newSvrValue=document.getElementById('svr').value;
+	    chrome.storage.sync.set({"svr": newSvrValue}, function() {
+	    	txtSvr = newSvrValue;
+	      console.log("setting svr to "+newSvrValue);
+	    });
 			try{
 				console.log("sp:"+sp);
 				var newValue=document.getElementById('regcode').value;

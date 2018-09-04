@@ -2,7 +2,6 @@
 <html>
   <head>
     <title>LEWEI WEB DTU</title>
-
     <script src="app.js"></script>
     <script src="ports.js"></script>
     <link rel="stylesheet" href="bootstrap.min.css">
@@ -20,6 +19,12 @@
         </span>
       </h4>
       <div id="settings" class="row">
+        <div class="col-sm-3">
+
+          <label for="svr" class="control-label">SERVER:PORT</label>
+          <input id="svr" class="form-control" value=""></input>
+		
+        </div>
         <div class="col-sm-3">
 
           <label for="regcode" class="control-label">REG CODE(USERKEY_GATEWAY/SN):</label>
@@ -66,7 +71,7 @@
     	<textarea id = "log" class="form-control" rows="12">
     	</textarea>
     </div>
-    <script type="text/javascript" src="jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="pageloaded.js"></script>
   </body>
 </html>

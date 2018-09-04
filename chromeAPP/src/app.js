@@ -11,6 +11,10 @@ function connectLewei()
   {
     chrome.sockets.tcp.close(clientId);
   }
+  
+  var svrInfo = txtSvr.split(':',2);
+  leweiUrl = svrInfo[0];
+  leweiPort = parseInt(svrInfo[1]);
   $('#nwk_switch').attr('src',"icon_switch_off.jpg");
   chrome.sockets.tcp.create({}, function (createInfo) {
       chrome.sockets.tcp.connect(createInfo.socketId,
@@ -47,6 +51,7 @@ function serSend() {
 var onConnectedCallback = function (r) {
 
   	$('#nwk_switch').attr('src',"icon_switch_on.jpg");
+  	
     var buf = str2ab(txtRegCode);
     //console.log(chrome.sockets.tcp.onReceive);
     
